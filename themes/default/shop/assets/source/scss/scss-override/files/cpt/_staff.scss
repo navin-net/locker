@@ -1,0 +1,37 @@
+/*
+ * Shortcode: staff.scss
+ * -----------------------------------------------
+*/
+.team-item {
+	position: relative;
+	.team-content {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: rgba(255,255,255,0.90);
+		text-align: center;
+		height: 100%;
+		width: 100%;
+		border-bottom: 3px solid var(--theme-color2);
+		transition: 300ms;
+		opacity: 0;
+		.team-information {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 25px;
+		}
+		.team-social {
+			position: absolute;
+			bottom: 25px;
+			left: 0;
+			right: 0;
+		}
+	}
+	&:hover {
+		.team-content {
+			opacity: 1;
+		}
+	}
+}

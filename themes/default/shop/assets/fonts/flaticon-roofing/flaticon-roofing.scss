@@ -1,0 +1,190 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 16/10/2020 08:18
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff2") format("woff2"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-shovel:before { content: "\f100"; }
+.flaticon-measuring-tape:before { content: "\f101"; }
+.flaticon-pillar:before { content: "\f102"; }
+.flaticon-compass:before { content: "\f103"; }
+.flaticon-roof:before { content: "\f104"; }
+.flaticon-shovel-1:before { content: "\f105"; }
+.flaticon-measuring:before { content: "\f106"; }
+.flaticon-measuring-tape-1:before { content: "\f107"; }
+.flaticon-title:before { content: "\f108"; }
+.flaticon-compass-1:before { content: "\f109"; }
+.flaticon-fireplace:before { content: "\f10a"; }
+.flaticon-roof-1:before { content: "\f10b"; }
+.flaticon-savings:before { content: "\f10c"; }
+.flaticon-plan:before { content: "\f10d"; }
+.flaticon-hand-gesture:before { content: "\f10e"; }
+.flaticon-pillar-1:before { content: "\f10f"; }
+.flaticon-roof-2:before { content: "\f110"; }
+.flaticon-color-palette:before { content: "\f111"; }
+.flaticon-picket:before { content: "\f112"; }
+.flaticon-ruler:before { content: "\f113"; }
+.flaticon-draws:before { content: "\f114"; }
+.flaticon-house-design:before { content: "\f115"; }
+.flaticon-studying:before { content: "\f116"; }
+.flaticon-idea:before { content: "\f117"; }
+.flaticon-award:before { content: "\f118"; }
+.flaticon-house-design-1:before { content: "\f119"; }
+.flaticon-architect:before { content: "\f11a"; }
+.flaticon-table:before { content: "\f11b"; }
+.flaticon-house-design-2:before { content: "\f11c"; }
+.flaticon-screwdriver:before { content: "\f11d"; }
+.flaticon-stairs:before { content: "\f11e"; }
+.flaticon-stationery:before { content: "\f11f"; }
+.flaticon-house:before { content: "\f120"; }
+.flaticon-expand:before { content: "\f121"; }
+.flaticon-wall:before { content: "\f122"; }
+.flaticon-engineer:before { content: "\f123"; }
+.flaticon-ruler-1:before { content: "\f124"; }
+.flaticon-tools:before { content: "\f125"; }
+.flaticon-fence:before { content: "\f126"; }
+.flaticon-drawing:before { content: "\f127"; }
+.flaticon-crane:before { content: "\f128"; }
+.flaticon-light-bulb:before { content: "\f129"; }
+.flaticon-crane-1:before { content: "\f12a"; }
+.flaticon-helmet:before { content: "\f12b"; }
+.flaticon-tools-1:before { content: "\f12c"; }
+.flaticon-parquet:before { content: "\f12d"; }
+.flaticon-tools-2:before { content: "\f12e"; }
+.flaticon-light-bulb-1:before { content: "\f12f"; }
+.flaticon-brick-wall:before { content: "\f130"; }
+.flaticon-drill:before { content: "\f131"; }
+.flaticon-parquet-1:before { content: "\f132"; }
+.flaticon-brick-wall-1:before { content: "\f133"; }
+.flaticon-hammer:before { content: "\f134"; }
+.flaticon-wallpaper:before { content: "\f135"; }
+.flaticon-wheelbarrow:before { content: "\f136"; }
+.flaticon-brick-wall-2:before { content: "\f137"; }
+.flaticon-ruler-2:before { content: "\f138"; }
+.flaticon-paint-roller:before { content: "\f139"; }
+.flaticon-ruler-3:before { content: "\f13a"; }
+.flaticon-window:before { content: "\f13b"; }
+.flaticon-drawing-1:before { content: "\f13c"; }
+.flaticon-screwdriver-1:before { content: "\f13d"; }
+.flaticon-paint:before { content: "\f13e"; }
+.flaticon-web:before { content: "\f13f"; }
+.flaticon-construction:before { content: "\f140"; }
+.flaticon-hook:before { content: "\f141"; }
+.flaticon-plans:before { content: "\f142"; }
+.flaticon-barrier:before { content: "\f143"; }
+.flaticon-winch:before { content: "\f144"; }
+.flaticon-houses:before { content: "\f145"; }
+.flaticon-trucks:before { content: "\f146"; }
+.flaticon-barrier-1:before { content: "\f147"; }
+.flaticon-plumbering:before { content: "\f148"; }
+.flaticon-gas-pipe:before { content: "\f149"; }
+.flaticon-tap:before { content: "\f14a"; }
+    
+    $font-Flaticon-shovel: "\f100";
+    $font-Flaticon-measuring-tape: "\f101";
+    $font-Flaticon-pillar: "\f102";
+    $font-Flaticon-compass: "\f103";
+    $font-Flaticon-roof: "\f104";
+    $font-Flaticon-shovel-1: "\f105";
+    $font-Flaticon-measuring: "\f106";
+    $font-Flaticon-measuring-tape-1: "\f107";
+    $font-Flaticon-title: "\f108";
+    $font-Flaticon-compass-1: "\f109";
+    $font-Flaticon-fireplace: "\f10a";
+    $font-Flaticon-roof-1: "\f10b";
+    $font-Flaticon-savings: "\f10c";
+    $font-Flaticon-plan: "\f10d";
+    $font-Flaticon-hand-gesture: "\f10e";
+    $font-Flaticon-pillar-1: "\f10f";
+    $font-Flaticon-roof-2: "\f110";
+    $font-Flaticon-color-palette: "\f111";
+    $font-Flaticon-picket: "\f112";
+    $font-Flaticon-ruler: "\f113";
+    $font-Flaticon-draws: "\f114";
+    $font-Flaticon-house-design: "\f115";
+    $font-Flaticon-studying: "\f116";
+    $font-Flaticon-idea: "\f117";
+    $font-Flaticon-award: "\f118";
+    $font-Flaticon-house-design-1: "\f119";
+    $font-Flaticon-architect: "\f11a";
+    $font-Flaticon-table: "\f11b";
+    $font-Flaticon-house-design-2: "\f11c";
+    $font-Flaticon-screwdriver: "\f11d";
+    $font-Flaticon-stairs: "\f11e";
+    $font-Flaticon-stationery: "\f11f";
+    $font-Flaticon-house: "\f120";
+    $font-Flaticon-expand: "\f121";
+    $font-Flaticon-wall: "\f122";
+    $font-Flaticon-engineer: "\f123";
+    $font-Flaticon-ruler-1: "\f124";
+    $font-Flaticon-tools: "\f125";
+    $font-Flaticon-fence: "\f126";
+    $font-Flaticon-drawing: "\f127";
+    $font-Flaticon-crane: "\f128";
+    $font-Flaticon-light-bulb: "\f129";
+    $font-Flaticon-crane-1: "\f12a";
+    $font-Flaticon-helmet: "\f12b";
+    $font-Flaticon-tools-1: "\f12c";
+    $font-Flaticon-parquet: "\f12d";
+    $font-Flaticon-tools-2: "\f12e";
+    $font-Flaticon-light-bulb-1: "\f12f";
+    $font-Flaticon-brick-wall: "\f130";
+    $font-Flaticon-drill: "\f131";
+    $font-Flaticon-parquet-1: "\f132";
+    $font-Flaticon-brick-wall-1: "\f133";
+    $font-Flaticon-hammer: "\f134";
+    $font-Flaticon-wallpaper: "\f135";
+    $font-Flaticon-wheelbarrow: "\f136";
+    $font-Flaticon-brick-wall-2: "\f137";
+    $font-Flaticon-ruler-2: "\f138";
+    $font-Flaticon-paint-roller: "\f139";
+    $font-Flaticon-ruler-3: "\f13a";
+    $font-Flaticon-window: "\f13b";
+    $font-Flaticon-drawing-1: "\f13c";
+    $font-Flaticon-screwdriver-1: "\f13d";
+    $font-Flaticon-paint: "\f13e";
+    $font-Flaticon-web: "\f13f";
+    $font-Flaticon-construction: "\f140";
+    $font-Flaticon-hook: "\f141";
+    $font-Flaticon-plans: "\f142";
+    $font-Flaticon-barrier: "\f143";
+    $font-Flaticon-winch: "\f144";
+    $font-Flaticon-houses: "\f145";
+    $font-Flaticon-trucks: "\f146";
+    $font-Flaticon-barrier-1: "\f147";
+    $font-Flaticon-plumbering: "\f148";
+    $font-Flaticon-gas-pipe: "\f149";
+    $font-Flaticon-tap: "\f14a";

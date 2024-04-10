@@ -1,0 +1,104 @@
+/*
+ * Shortcode: testimonials.scss
+ * -----------------------------------------------
+*/
+.testimonial {
+  .item {
+    position: relative;
+    overflow: hidden;
+    .thumb img {
+      margin: auto;
+      max-width: 75px;
+    }
+  }  
+}
+
+.testimonial .comment p {
+  color: #a9a9a9;
+  font-weight: 400;
+}
+/* -------- Testimonial-Style1 ---------- */
+.testimonials {
+  &.attorney-details {
+    .thumb {
+      img {
+        width: auto;
+      }
+    }
+  }
+}
+
+/* -------- Testimonial-Style2 ---------- */
+.testimonial.style2 {
+  text-align: center;
+}
+.testimonial.style2 .thumb img {
+  display: inline-block;
+  width: auto;
+  width: 75px;
+}
+
+
+/* -------- Testimonial-Style1 ---------- */
+.testimonial.style1 {
+  .item {
+    border: none;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .quote, .thumb {
+    margin-bottom: 30px;
+  }
+
+  .author {
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+
+  .title {
+    color: #c0c0c0;
+    margin-bottom: 20px;
+  }
+
+  .comment {
+    padding: 35px 25px;
+
+    p {
+      font-weight: 500;
+      margin-left: 30px;
+    }
+
+    background: #f8f8f8;
+    color: #777;
+    border: 3px solid white;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px 0 fade(#000, 10%);
+    margin: 1px;
+    position: relative;
+
+    &::before {
+      color: #d3d3d3;
+      content: "\f10d";
+      font-family: "Font Awesome 5 Free";
+      font-weight: bold;
+      font-size: 30px;
+      left: 20px;
+      position: absolute;
+      top: 7px;
+    }
+  }
+  .content{
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+.owl-carousel .owl-item .testimonial img {
+  display: inline;
+  width: auto;
+}
+.testimonial .signature {
+  width: 60px;
+}

@@ -1,0 +1,65 @@
+/*
+ *	About Section: Style Scss
+ * -----------------------------------------------
+*/
+.about-us-box{
+	.funfact-icon{
+    	&:before{
+			background-color: $theme-color2;
+    	}
+	}
+}
+.widget{
+	&.about_check_list{
+		ul {
+		    li {
+		    	&:before {
+		    		color: $theme-color2;
+		      	}
+		    }
+		}
+	}
+}
+.tm-sc-animated-layer-advanced {
+	.animated-layer-advanced-inner {
+		.layer-image-wrapper {
+			.layer-image{
+				&.img-two{
+					&:before{
+						background-color: $theme-color2;
+					}
+				}
+			}
+		}
+	}
+}
+
+/*
+ * Service Section: Home 1 & 2
+ * -----------------------------------------------
+*/
+.img-icon-service-box{
+	&:hover{
+		.tm-details{
+			.bottom-bar{
+				background-color: $theme-color2;
+			}
+		}
+	}
+}
+.tm-roofting-iconbox{
+	.icon-box{
+		&:hover{
+			a.icon{
+				background-color:  $theme-color2;
+			}
+		}
+	}
+}
+.tm-whychose-box{
+	.experience-iconbox{
+		&:before{
+		    border-color: $theme-color2 transparent transparent transparent;
+		}
+	}
+}
