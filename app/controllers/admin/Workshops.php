@@ -583,7 +583,14 @@ class Workshops extends MY_Controller
     public function registers()
     {
         $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-      
+        $this->data['event_id'] = $this->site->getAllEvent();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        if ($this->input->post('start_date')) {
+            $dt = 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
+        } else {
+            $dt = 'Till ' . $this->input->post('end_date');
+        }
+        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('workshops/registers'), 'page' => lang('registers')], ['link' => '#', 'page' => lang('register_report')]];
         $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('system_settings'), 'page' => lang('workshops')], ['link' => '#', 'page' => lang('registers')]];
         $meta = ['page_title' => lang('registers'), 'bc' => $bc];
         $this->page_construct('workshops/registers', $meta, $this->data);
@@ -745,7 +752,13 @@ class Workshops extends MY_Controller
     }
     public function register_actions()
     {
-
+        $this->data['event_id'] = $this->site->getAllEvent();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        if ($this->input->post('start_date')) {
+            $dt = 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
+        } else {
+            $dt = 'Till ' . $this->input->post('end_date');
+        }
         $this->form_validation->set_rules('form_action', lang('form_action'), 'required');
 
         if ($this->form_validation->run() == true) {
@@ -818,6 +831,27 @@ class Workshops extends MY_Controller
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function register_events()
     {
         // $this->sma->checkPermissions('products');
@@ -834,20 +868,13 @@ class Workshops extends MY_Controller
         $this->page_construct('workshops/register_events', $meta, $this->data);
     }
 
+
     public function getRegisterevents($pdf = null, $xls = null)
     {
         $event_id = $this->input->get('event_id') ? $this->input->get('event_id') : null;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
         
-        $ev = "( SELECT ev.title, ev.start_date, ev.end_date, s.name from {$this->db->dbprefix('md_events')} ev
-        left JOIN " . $this->db->dbprefix('md_event_speakers') . ' es ON ev.id = es.event_id
-        left join ' . $this->db->dbprefix('md_speakers') . ' s ON es.speaker_id = s.id ';
-    //        if ($start_date) {
-    //             $start_date = $this->sma->fld($start_date);
-    //             $end_date   = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
-    //             $re .= " md_event.start_date >= '{$start_date}' AND md_event.end_date < '{$end_date}' ";
-    // }
         $this->load->library('datatables');
         $this->datatables
         ->select("{$this->db->dbprefix('md_events')}.title,
@@ -862,21 +889,121 @@ class Workshops extends MY_Controller
 
         if ($event_id) {
         $this->datatables->where('md_event_registers.event_id', $event_id);
-    }
- 
-     if ($start_date) {
-                $this->datatables->where('date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
-            }
-        // if ($start_date && $end_date) { 
-           
-        // $this->datatables->where("md_events.start_date BETWEEN '$start_date' AND '$end_date'");
-
-        // }
+        }if ($start_date) {
+        $this->datatables->where("md_events.start_date BETWEEN '$start_date' AND '$end_date'");
+        }
         $this->datatables->group_by('md_event_registers.id, md_event_registers.name,
         md_event_registers.phone,md_events.end_date,md_events.start_date,md_event_registers.email,md_event_registers.phone');
         $this->datatables->unset_column('id');
         echo $this->datatables->generate();
     }
+
+
+    public function getTesting($pdf = null, $xls = null)
+    {
+        $event_id = $this->input->get('event_id') ? $this->input->get('event_id') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $speaker_id = $this->input->get('speaker_id') ? $this->input->get('speaker_id') : null;
+         if ($pdf || $xls) {
+            $this->db->select($this->db->dbprefix('md_events'). '.title,' .
+         $this->db->dbprefix('md_event_registers') . '.name, ' . 
+          $this->db->dbprefix('md_event_registers') . '.phone, ' . 
+           $this->db->dbprefix('md_event_registers') . '.email, ' . 
+        $this->db->dbprefix('md_event_registers') . '.address',false)
+            ->from('md_events')
+            ->join('md_event_speakers','md_events.id = md_event_speakers.event_id','left')
+            ->join('md_speakers','md_event_speakers.speaker_id = md_speakers.id','left')
+            ->join('md_event_registers','md_events.id = md_event_registers.event_id','left')
+            ->group_by('md_events.id, md_events.title')
+            ->order_by('md_events.title', 'asc');
+            if ($event_id) {
+                 $this->db->where($this->db->dbprefix('md_events') . '.id', $event_id);
+            }
+             $q = $this->db->get();
+            if ($q->num_rows() > 0) {
+                foreach (($q->result()) as $row) {
+                    $data[] = $row;
+                }
+            } else {
+                $data = null;
+            }
+            if (!empty($data)) {
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
+                $this->excel->getActiveSheet()->setTitle(lang('events_report'));
+                $this->excel->getActiveSheet()->SetCellValue('A1', lang('title'));
+                $this->excel->getActiveSheet()->SetCellValue('B1', lang('name'));
+                $this->excel->getActiveSheet()->SetCellValue('C1', lang('phone'));
+                $this->excel->getActiveSheet()->SetCellValue('D1', lang('email'));
+                $this->excel->getActiveSheet()->SetCellValue('E1', lang('address'));
+             
+
+                $row  = 2;
+                foreach ($data as $data_row) {
+                    $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->title);
+                    $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->name);
+                    $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->phone);
+                    $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->email);
+                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->address);
+                     $pl   += $profit;
+                    $row++;
+                }
+                $this->excel->getActiveSheet()->getStyle('B' . $row . ':F' . $row)->getBorders()
+                    ->getTop()->setBorderStyle('medium');
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(35);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+                $this->excel->getDefaultStyle()->getAlignment()->setVertical('center');
+                $this->excel->getActiveSheet()->getStyle('C2:G' . $row)->getAlignment()->setWrapText(true);
+                $filename = 'events_report';
+                $this->load->helper('excel');
+                create_excel($this->excel, $filename);
+            }
+            $this->session->set_flashdata('error', lang('nothing_found'));
+            redirect($_SERVER['HTTP_REFERER']);
+        }else{
+    $this->load->library('datatables');
+    $this->datatables
+        ->select($this->db->dbprefix('md_event_registers') . '.id as cid, ' .
+                   $this->db->dbprefix('md_events') . '.title, ' . 
+        $this->db->dbprefix('md_event_registers') . '.name, ' . 
+  
+        $this->db->dbprefix('md_event_registers') . '.phone',false)
+                    ->from('md_event_registers')
+                    ->join('md_events','md_event_registers.event_id = md_events.id','left');
+        if ($event_id) {
+                $this->datatables->where('md_event_registers.event_id', $event_id);
+         }if ($start_date) {
+        $this->datatables->where("md_events.start_date BETWEEN '$start_date' AND '$end_date'");
+        }
+        $this->datatables->group_by('md_event_registers.id, md_event_registers.name');
+        $this->datatables->unset_column('cid');
+        echo $this->datatables->generate();
+
+}
+    }
+     public function testing()
+    {
+        // $this->sma->checkPermissions('products');
+        $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        $this->data['event_id'] = $this->site->getAllEvent();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        if ($this->input->post('start_date')) {
+            $dt = 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
+        } else {
+            $dt = 'Till ' . $this->input->post('end_date');
+        }
+        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('workshops/registers'), 'page' => lang('registers')], ['link' => '#', 'page' => lang('register_report')]];
+        $meta = ['page_title' => lang('register_report'), 'bc' => $bc];
+        $this->page_construct('workshops/testing', $meta, $this->data);
+    }
+
+
+
 
 
 }

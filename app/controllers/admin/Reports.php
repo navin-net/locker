@@ -759,7 +759,8 @@ class Reports extends MY_Controller
 
         if ($pdf || $xls) {
             $this->db
-                ->select($this->db->dbprefix('brands') . '.name,
+                ->select($this->db->dbprefix('brands') . '.name,' .
+                    $this->db->dbprefix('brands') . '.slug,
                     SUM( COALESCE( PCosts.purchasedQty, 0 ) ) as PurchasedQty,
                     SUM( COALESCE( PSales.soldQty, 0 ) ) as SoldQty,
                     SUM( COALESCE( PCosts.totalPurchase, 0 ) ) as TotalPurchase,
@@ -3175,8 +3176,8 @@ class Reports extends MY_Controller
         $this->sma->checkPermissions('products', true);
         $warehouse  = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
         $category   = $this->input->get('category') ? $this->input->get('category') : null;
-        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+            $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+            $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         $pp = "( SELECT pp.category_id as category, SUM( pi.quantity ) purchasedQty, SUM( pi.subtotal ) totalPurchase from {$this->db->dbprefix('products')} pp
                 left JOIN " . $this->db->dbprefix('purchase_items') . ' pi ON pp.id = pi.product_id
@@ -3205,97 +3206,101 @@ class Reports extends MY_Controller
         $pp .= ' GROUP BY pp.category_id ) sa';
         $sp .= ' GROUP BY sp.category_id ) PSales';
 
-        if ($pdf || $xls) {
-            $this->db
-                ->select($this->db->dbprefix('categories') . '.code, ' . $this->db->dbprefix('categories') . '.name,
-                    SUM( COALESCE( sa.purchasedQty, 0 ) ) as PurchasedQty,
-                    SUM( COALESCE( PSales.soldQty, 0 ) ) as SoldQty,
-                    SUM( COALESCE( sa.totalPurchase, 0 ) ) as TotalPurchase,
-                    SUM( COALESCE( PSales.totalSale, 0 ) ) as TotalSales,
-                    (SUM( COALESCE( PSales.totalSale, 0 ) )- SUM( COALESCE( sa.totalPurchase, 0 ) ) )
-                     as Profit', false)
-                ->from('categories')
-                ->join($sp, 'categories.id = PSales.category', 'left')
-                ->join($pp, 'categories.id = sa.category', 'left')
-                ->group_start()->where('parent_id is NULL', null, false)->or_where('parent_id', 0)->group_end()
-                ->where('categories.parent_id')
-                ->group_by('categories.id, categories.code, categories.name')
-                ->order_by('categories.code', 'asc');
+        // if ($pdf || $xls) {
+        //     $this->db
+        //         ->select($this->db->dbprefix('categories') . '.code, ' 
+        //             . $this->db->dbprefix('categories') . '.name,
+        //             SUM( COALESCE( sa.purchasedQty, 0 ) ) as PurchasedQty,
+        //             SUM( COALESCE( PSales.soldQty, 0 ) ) as SoldQty,
+        //             SUM( COALESCE( sa.totalPurchase, 0 ) ) as TotalPurchase,
+        //             SUM( COALESCE( PSales.totalSale, 0 ) ) as TotalSales,
+        //             (SUM( COALESCE( PSales.totalSale, 0 ) )- SUM( COALESCE( sa.totalPurchase, 0 ) ) )
+        //              as Profit', false)
+        //         ->from('categories')
+        //         ->join($sp, 'categories.id = PSales.category', 'left')
+        //         ->join($pp, 'categories.id = sa.category', 'left')
+        //         ->group_start()->where('parent_id is NULL', null, false)->or_where('parent_id', 0)->group_end()
+        //         ->where('categories.parent_id')
+        //         ->group_by('categories.id, categories.code, categories.name')
+        //         ->order_by('categories.code', 'asc');
 
-            if ($category) {
-                $this->db->where($this->db->dbprefix('categories') . '.id', $category);
-            }
+        //     if ($category) {
+        //         $this->db->where($this->db->dbprefix('categories') . '.id', $category);
+        //     }
 
-            $q = $this->db->get();
-            if ($q->num_rows() > 0) {
-                foreach (($q->result()) as $row) {
-                    $data[] = $row;
-                }
-            } else {
-                $data = null;
-            }
+        //     $q = $this->db->get();
+        //     if ($q->num_rows() > 0) {
+        //         foreach (($q->result()) as $row) {
+        //             $data[] = $row;
+        //         }
+        //     } else {
+        //         $data = null;
+            // }
 
-            if (!empty($data)) {
-                $this->load->library('excel');
-                $this->excel->setActiveSheetIndex(0);
-                $this->excel->getActiveSheet()->setTitle(lang('categories_report'));
-                $this->excel->getActiveSheet()->SetCellValue('A1', lang('category_code'));
-                $this->excel->getActiveSheet()->SetCellValue('B1', lang('category_name'));
-                $this->excel->getActiveSheet()->SetCellValue('C1', lang('purchased'));
-                $this->excel->getActiveSheet()->SetCellValue('D1', lang('sold'));
-                $this->excel->getActiveSheet()->SetCellValue('E1', lang('purchased_amount'));
-                $this->excel->getActiveSheet()->SetCellValue('F1', lang('sold_amount'));
-                $this->excel->getActiveSheet()->SetCellValue('G1', lang('profit_loss'));
+            // if (!empty($data)) {
+            //     $this->load->library('excel');
+            //     $this->excel->setActiveSheetIndex(0);
+            //     $this->excel->getActiveSheet()->setTitle(lang('categories_report'));
+            //     $this->excel->getActiveSheet()->SetCellValue('A1', lang('category_code'));
+            //     $this->excel->getActiveSheet()->SetCellValue('B1', lang('category_name'));
+            //     $this->excel->getActiveSheet()->SetCellValue('C1', lang('purchased'));
+            //     $this->excel->getActiveSheet()->SetCellValue('D1', lang('sold'));
+            //     $this->excel->getActiveSheet()->SetCellValue('E1', lang('purchased_amount'));
+            //     $this->excel->getActiveSheet()->SetCellValue('F1', lang('sold_amount'));
+            //     $this->excel->getActiveSheet()->SetCellValue('G1', lang('profit_loss'));
 
-                $row  = 2;
-                $sQty = 0;
-                $pQty = 0;
-                $sAmt = 0;
-                $pAmt = 0;
-                $pl   = 0;
-                foreach ($data as $data_row) {
-                    $profit = $data_row->TotalSales - $data_row->TotalPurchase;
-                    $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->code);
-                    $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->name);
-                    $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->PurchasedQty);
-                    $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->SoldQty);
-                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->TotalPurchase);
-                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $data_row->TotalSales);
-                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $profit);
-                    $pQty += $data_row->PurchasedQty;
-                    $sQty += $data_row->SoldQty;
-                    $pAmt += $data_row->TotalPurchase;
-                    $sAmt += $data_row->TotalSales;
-                    $pl   += $profit;
-                    $row++;
-                }
-                $this->excel->getActiveSheet()->getStyle('C' . $row . ':G' . $row)->getBorders()
-                    ->getTop()->setBorderStyle('medium');
-                $this->excel->getActiveSheet()->SetCellValue('C' . $row, $pQty);
-                $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sQty);
-                $this->excel->getActiveSheet()->SetCellValue('E' . $row, $pAmt);
-                $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sAmt);
-                $this->excel->getActiveSheet()->SetCellValue('G' . $row, $pl);
+            //     $row  = 2;
+            //     $sQty = 0;
+            //     $pQty = 0;
+            //     $sAmt = 0;
+            //     $pAmt = 0;
+            //     $pl   = 0;
+            //     foreach ($data as $data_row) {
+            //         $profit = $data_row->TotalSales - $data_row->TotalPurchase;
+            //         $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->code);
+            //         $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->name);
+            //         $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->PurchasedQty);
+            //         $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->SoldQty);
+            //         $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->TotalPurchase);
+            //         $this->excel->getActiveSheet()->SetCellValue('F' . $row, $data_row->TotalSales);
+            //         $this->excel->getActiveSheet()->SetCellValue('G' . $row, $profit);
+            //         $pQty += $data_row->PurchasedQty;
+            //         $sQty += $data_row->SoldQty;
+            //         $pAmt += $data_row->TotalPurchase;
+            //         $sAmt += $data_row->TotalSales;
+            //         $pl   += $profit;
+            //         $row++;
+            //     }
+            //     $this->excel->getActiveSheet()->getStyle('C' . $row . ':G' . $row)->getBorders()
+            //         ->getTop()->setBorderStyle('medium');
+            //     $this->excel->getActiveSheet()->SetCellValue('C' . $row, $pQty);
+            //     $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sQty);
+            //     $this->excel->getActiveSheet()->SetCellValue('E' . $row, $pAmt);
+            //     $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sAmt);
+            //     $this->excel->getActiveSheet()->SetCellValue('G' . $row, $pl);
 
-                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(35);
-                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(35);
-                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
-                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
-                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(25);
-                $this->excel->getDefaultStyle()->getAlignment()->setVertical('center');
-                $this->excel->getActiveSheet()->getStyle('C2:G' . $row)->getAlignment()->setWrapText(true);
-                $filename = 'categories_report';
-                $this->load->helper('excel');
-                create_excel($this->excel, $filename);
-            }
-            $this->session->set_flashdata('error', lang('nothing_found'));
-            redirect($_SERVER['HTTP_REFERER']);
-        } else {
+            //     $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(35);
+            //     $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(35);
+            //     $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+            //     $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+            //     $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+            //     $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+            //     $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(25);
+            //     $this->excel->getDefaultStyle()->getAlignment()->setVertical('center');
+            //     $this->excel->getActiveSheet()->getStyle('C2:G' . $row)->getAlignment()->setWrapText(true);
+            //     $filename = 'categories_report';
+            //     $this->load->helper('excel');
+            //     create_excel($this->excel, $filename);
+            // }
+            // $this->session->set_flashdata('error', lang('nothing_found'));
+            // redirect($_SERVER['HTTP_REFERER']);
+        // }
+        //  else {
             $this->load->library('datatables');
             $this->datatables
-                ->select($this->db->dbprefix('categories') . '.id as cid, ' . $this->db->dbprefix('categories') . '.code, ' . $this->db->dbprefix('categories') . '.name,
+                ->select($this->db->dbprefix('categories') . '.id as cid, ' 
+                    . $this->db->dbprefix('categories') . '.code, ' . 
+                    $this->db->dbprefix('categories') . '.name,
                     SUM( COALESCE( sa.purchasedQty, 0 ) ) as PurchasedQty,
                     SUM( COALESCE( PSales.soldQty, 0 ) ) as SoldQty,
                     SUM( COALESCE( sa.totalPurchase, 0 ) ) as TotalPurchase,
@@ -3310,8 +3315,8 @@ class Reports extends MY_Controller
                 $this->datatables->where('categories.id', $category);
             }
             $this->datatables->group_by('categories.id, categories.code, categories.name, PSales.SoldQty, PSales.totalSale, sa.purchasedQty, sa.totalPurchase');
-            $this->datatables->unset_column('cid');
+                $this->datatables->unset_column('cid');
             echo $this->datatables->generate();
         }
     }
-}
+
