@@ -261,6 +261,7 @@ class News_model extends CI_Model
 
       public function getNewEx($id)
     {
+        
         $query = $this->db->get_where('md_news',['id' => $id]);
         if($query->num_rows() > 0) {
             return $query->row();
@@ -281,7 +282,7 @@ class News_model extends CI_Model
 
      public function getNewCategories($id){
 
-        $this->db->select('md_news_categories.*');
+        $this->db->select('md_news_categories.name');
         $this->db->join('md_news_categories','md_news.category_id=md_news_categories.id');
         $this->db->where('md_news.id',$id);
          $query = $this->db->get('md_news');

@@ -31,10 +31,11 @@ class News extends MY_Controller
         {
         
         $this->sma->checkPermissions('index');
-        $new_details = $this->news_model->getNewExport($id);
+        $new_details = $this->news_model->getNewByID($id);
         $tag_details = $this->news_model->getTagBy_id($id);
+
         $categorynew_details    = $this->news_model->getNewCategories($id);
-        // $this->sma->print_arrays($categorynew_details);
+        // $this->sma->print_arrays($new_details);
         if (!$id || !$new_details) {
             $this->session->set_flashdata('error', lang('event_not_found'));
             redirect($_SERVER['HTTP_REFERER']);

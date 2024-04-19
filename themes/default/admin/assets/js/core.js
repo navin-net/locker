@@ -1492,7 +1492,13 @@ $(document).ready(function () {
     });
     $('#myModal').modal('show');
     });
-
+    //brands
+     $('body').on('click', '.brand_link td:not(:first-child)', function () {
+        $('#myModal').modal({
+            remote: site.base_url + 'system_settings/edit_brand/' + $(this).parent('.brand_link').attr('id'),
+        });
+        $('#myModal').modal('show');
+    });
     
     $('#clearLS').click(function (event) {
         bootbox.confirm(lang.r_u_sure, function (result) {

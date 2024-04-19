@@ -112,6 +112,7 @@ class Welcome extends MY_Controller
         $this->data['suppliers'] = $this->db_model->getLatestSuppliers();
         $this->data['partners']  = $this->db_model->getLastestPartners();
         $this->data['careers']   = $this->db_model->getLastestCareers();
+        $this->data['brands']    = $this->db_model->getLatestBrands();
         $this->data['news']      = $this->db_model->getLastestNews();
         $this->data['events']    = $this->db_model->getLastestEvents();
         $this->data['chatData']  = $this->db_model->getChartData();

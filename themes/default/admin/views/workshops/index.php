@@ -3,8 +3,8 @@
     $(document).ready(function () {
         function active_yn(x) {
             return x == 1 ?
-                '<div class="text-center"><span class="label label-primary"><?= lang('active'); ?></span></div>' :
-                '<div class="text-center"><span class="label label-danger"><?= lang('inactive'); ?></span></div>';
+                '<div class="text-center"><span class="label label-primary"><?= lang('active'); ?></span></div>' 
+                :'<div class="text-center"><span class="label label-danger"><?= lang('inactive'); ?></span></div>';
         }
 
         function type(x) {

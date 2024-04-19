@@ -384,13 +384,23 @@ class Site extends CI_Model
     }
     public function getAllEvent()
     {
-        // $this->db->where('event_id',null)->or_where('event_id',0)->order_by('title');
         $q = $this->db->get('md_events');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row){
                 $data[] = $row;
             }
             // code...
+            return $data;
+        }
+        return false;
+    }
+    public function getAllSpeaker()
+    {
+        $q = $this->db->get('md_speakers');
+        if ($q->num_rows()>0) {
+            foreach (($q->result()) as $row){
+                $data[] = $row;
+            }
             return $data;
         }
         return false;

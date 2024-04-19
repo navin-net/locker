@@ -41,31 +41,21 @@
                                                 <td><?= lang('title');?></td>
                                                 <td><?php echo $news->title; ?></td>
                                             </tr>
-                                         <!--    <tr>
-                                                <td><?= lang('type'); ?></td>
-                                                <td><?php echo $news->type; ?></td>
-                                            </tr> -->
+                                             <tr>
+                                                <td><?= lang('Category News'); ?></td>
+                                                <td><?php echo $news->category_name; ?></td>
+                                            </tr> 
                                  
                         
                                             <tr>
                                                 <td><?= lang('description'); ?></td>
                                                 <td><?php echo$news->description; ?></td>
                                             </tr>
+                                        
 
                                             <table
                                                 class="table table-bordered table-striped table-condensed dfTable three-columns">
-                                                <thead>
-                                                    <tr>
-                                                        <th><?= lang('category_news') ?></th>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($categories as $key) { ?>
-                                                    
-                    <td><?php echo'<tr><td style="text-align: center;">'.'   '.$key->name.'</tr></td><strong>';?>
-                                                    </td>
-                                                    <?php } ?>
-
-                                                </tbody>
+                                          
                                                 </tr>
 
                                         </tbody>
@@ -102,3 +92,8 @@
                             </div>
                         </div>
                     </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

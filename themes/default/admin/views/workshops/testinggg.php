@@ -5,7 +5,9 @@ $v = '';
 if ($this->input->post('event_id')) {
     $v .= '&event_id=' . $this->input->post('event_id');
 }
-
+if ($this->input->post('warehouse')) {
+    $v .= '&warehouse=' . $this->input->post('warehouse');
+}
 if ($this->input->post('start_date')) {
     $v .= '&start_date=' . $this->input->post('start_date');
 }
@@ -20,7 +22,7 @@ if ($this->input->post('end_date')) {
             "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
             "iDisplayLength": <?= $Settings->rows_per_page ?>,
             'bProcessing': true, 'bServerSide': true,
-            'sAjaxSource': '<?= admin_url('workshops/getRegisterevents/?v=1' . $v) ?>',
+            'sAjaxSource': '<?= admin_url('workshops/getTestingg/?v=1' . $v) ?>',
             'fnServerData': function (sSource, aoData, fnCallback) {
                 aoData.push({
                     "name": "<?= $this->security->get_csrf_token_name() ?>",
@@ -28,11 +30,12 @@ if ($this->input->post('end_date')) {
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [null, null,null,null,null,null],
+               "aoColumns": [null, null,null,null,null],
           
         }).fnSetFilteringDelay().dtFilter([
-            {column_number: 0, filter_default_label: "[<?=lang('category_code');?>]", filter_type: "text", data: []},
-            {column_number: 1, filter_default_label: "[<?=lang('category_name');?>]", filter_type: "text", data: []},
+            {column_number: 0, filter_default_label: "[<?=lang('name_register');?>]", filter_type: "text", data: []},
+            {column_number: 1, filter_default_label: "[<?=lang('event_name');?>]", filter_type: "text", data: []},
+            {column_number: 2, filter_default_label: "[<?=lang('phone_register');?>]", filter_type: "text", data: []},
         ], "footer");
     });
 </script>
@@ -54,8 +57,7 @@ if ($this->input->post('end_date')) {
 <div class="box">
     <div class="box-header">
         <h2 class="blue">
-            <i class="fa-fw fa fa-folder-open"></i><?= lang('register_report'); ?> 
-            <?php
+            <i class="fa-fw fa fa-cubes"></i><?= lang('register_report'); ?> <?php
             if ($this->input->post('start_date')) {
                 echo 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
             }
@@ -83,7 +85,11 @@ if ($this->input->post('end_date')) {
                         <i class="icon fa fa-file-excel-o"></i>
                     </a>
                 </li>
-          
+                <li class="dropdown">
+                    <a href="#" id="image" class="tip" title="<?= lang('save_image') ?>">
+                        <i class="icon fa fa-file-picture-o"></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -95,23 +101,23 @@ if ($this->input->post('end_date')) {
 
                 <div id="form">
 
-                    <?php echo admin_form_open('workshops/register_events', 'autocomplete="off"'); ?>
+                    <?php echo admin_form_open('workshops/register_reports', 'autocomplete="off"'); ?>
                     <div class="row">
-                        <div class="col-sm-4">
-                          
-                            <div class="form-group">
-                                <label class="control-label" for="warehouse"><?= lang('event'); ?></label>
-                                <?php
-                                $ev[''] = lang('select') . ' ' . lang('event');
-                                foreach ($event_id as $event) {
-                                    $ev[$event->id] = $event->title;
-                                }
-                                echo form_dropdown('event_id', $ev, (isset($_POST['event_id']) ? $_POST['event_id'] : ''), 'class="form-control" id="event_id" data-placeholder="' . $this->lang->line('select') . ' ' . $this->lang->line('event_id') . '"');
-                                ?>
-                            </div> 
 
-                                                 
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <?= lang('events', 'event_id') ?>
+                                <?php
+                                $bt[''] = lang('select') . ' ' . lang('event');
+                                foreach ($event_id as $event_id) {
+                                    $bt[$event_id->id] = $event_id->title;
+                                }
+                    echo form_dropdown('event_id', $bt, (isset($_POST['event_id']) ? $_POST['event_id'] : ''), 'class="form-control select" id="event_id" placeholder="' . lang('select') . ' ' . lang('event_id') . '" style="width:100%"')
+                                ?>
+                            </div>
                         </div>
+
+
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <?= lang('start_date', 'start_date'); ?>
@@ -141,21 +147,22 @@ if ($this->input->post('end_date')) {
                            style="margin-bottom:5px;">
                         <thead>
                         <tr class="active">
-                            <th><?= lang('event'); ?></th>
+                            <th><?= lang('events'); ?></th>
                             <th><?= lang('name'); ?></th>
-                             <th><?= lang('start_date'); ?></th>
-                            <th><?= lang('end_date'); ?></th>
-                            <th><?= lang('status'); ?></th>
                             <th><?= lang('phone'); ?></th>
+                               <th><?= lang('email'); ?></th>
+                            <th><?= lang('address'); ?></th>
                             
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="7" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
+                            <td colspan="6" class="dataTables_empty"><?= lang('loading_data_from_server') ?></td>
                         </tr>
                         </tbody>
-                      
+                        <tfoot class="dtFilter">
+        
+                        </tfoot>
                     </table>
                 </div>
 
@@ -165,4 +172,26 @@ if ($this->input->post('end_date')) {
 </div>
 
 <script type="text/javascript" src="<?= $assets ?>js/html2canvas.min.js"></script>
-<!--  -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#pdf').click(function (event) {
+            event.preventDefault();
+            window.location.href = "<?=admin_url('workshops/getRegiter_reports/pdf/?v=1' . $v)?>";
+            return false;
+        });
+        $('#xls').click(function (event) {
+            event.preventDefault();
+            window.location.href = "<?=admin_url('workshops/getRegiter_reports/0/xls/?v=1' . $v)?>";
+            return false;
+        });
+        $('#image').click(function (event) {
+            event.preventDefault();
+            html2canvas($('.box'), {
+                onrendered: function (canvas) {
+                    openImg(canvas.toDataURL());
+                }
+            });
+            return false;
+        });
+    });
+</script>

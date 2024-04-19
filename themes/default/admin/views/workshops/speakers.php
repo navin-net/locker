@@ -45,7 +45,7 @@
                             <a href="#" id="excel" data-action="export_excel">
                                 <i class="fa fa-file-excel-o"></i> <?= lang('export_to_excel') ?>
                             </a>
-                        </li>
+                        </li>   
                         <li class="divider"></li>
                         <li>
                             <a href="#" id="delete" data-action="delete">

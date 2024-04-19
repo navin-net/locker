@@ -196,6 +196,8 @@ class Workshops_model extends CI_Model
         return false;
     }
 
+
+
     public function getRegisterBy_id($id)
     {
         $this->db->select('md_event_registers.name as rname');
@@ -204,6 +206,31 @@ class Workshops_model extends CI_Model
         $query = $this->db->get('md_events');
         return $query->result();
     }
+
+
+    public function getTesting($id)
+    {
+        $this->db->select('count(name) as total_register', false);
+        $this->db->join('md_event_registers','md_events.id=md_event_registers.event_id');
+        if ($id) {
+            $this->db->where('md_events.id', $id);
+        }
+        $q = $this->db->get('md_events');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
     public function getSpeakersBy_id($id) {
         // $this->db->select('md_speakers.name as sname,phone');
         $this->db->select('*');

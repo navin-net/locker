@@ -1,18 +1,4 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php
-$v = '';
-
-if ($this->input->post('event_id')) {
-    $v .= '&event_id=' . $this->input->post('event_id');
-}
-
-if ($this->input->post('start_date')) {
-    $v .= '&start_date=' . $this->input->post('start_date');
-}
-if ($this->input->post('end_date')) {
-    $v .= '&end_date=' . $this->input->post('end_date');
-}
-?>
+<?php defined('BASEPATH') or exit ('No direct script access allowed'); ?>
 <script>
     $(document).ready(function () {
      
@@ -21,9 +7,7 @@ if ($this->input->post('end_date')) {
             "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
             "iDisplayLength": <?= $Settings->rows_per_page ?>,
             'bProcessing': true, 'bServerSide': true,
-                        'sAjaxSource': '<?= admin_url('workshops/getRegisterevents/?v=1' . $v) ?>',
-
-            // 'sAjaxSource': '<?= admin_url('workshops/getRegisters') ?>',
+            'sAjaxSource': '<?= admin_url('workshops/getRegisters') ?>',
             'fnServerData': function (sSource, aoData, fnCallback) {
                 aoData.push({
                     "name": "<?= $this->security->get_csrf_token_name() ?>",
@@ -39,33 +23,12 @@ if ($this->input->post('end_date')) {
         });
     });
 </script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#form').hide();
-        $('.toggle_down').click(function () {
-            $("#form").slideDown();
-            return false;
-        });
-        $('.toggle_up').click(function () {
-            $("#form").slideUp();
-            return false;
-        });
-
-    });
-</script>
-<?= admin_form_open('workshops/register_actions', 'id="action-form"','autocomplete="off"') ?>
+<?= admin_form_open('workshops/register_actions', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
         <h2 class="blue"><i class="fa-fw fa fa-th-list"></i>
             <?= lang('register_event'); ?>
-             <?php
-            if ($this->input->post('start_date')) {
-                echo 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
-            }
-            ?>
         </h2>
-    
-      
 
         <div class="box-icon">
             <ul class="btn-tasks">
@@ -75,22 +38,16 @@ if ($this->input->post('end_date')) {
                     </a>
                     <ul class="dropdown-menu pull-right tasks-menus" role="menu" aria-labelledby="dLabel">
                         <li>
-            <a href="<?php echo admin_url('workshops/add_register'); ?>" data-toggle="modal"
+                            <a href="<?php echo admin_url('workshops/add_register'); ?>" data-toggle="modal"
                                 data-target="#myModal">
                                 <i class="fa fa-plus"></i>
                                 <?= lang('add_register_event') ?>
                             </a>
                         </li>
-
                         <li>
-                            <a href="<?php echo admin_url('workshops/register_events'); ?>">
-                            <i class="fa fa-th-list"></i>
-                            <?= lang('report_register') ?>
-                        </a>
-                        </li>
-                         <li>
-                            <a href="#" id="excel" data-action="export_excel">
-                                <i class="fa fa-file-excel-o"></i> <?= lang('export_to_excel') ?>
+                            <a href="<?php echo admin_url('workshops/register_reports'); ?>">
+                                <i class="fa fa-th-list"></i>
+                                <?= lang('list_report_register') ?>
                             </a>
                         </li>
 
@@ -105,20 +62,6 @@ if ($this->input->post('end_date')) {
                 </li>
             </ul>
         </div>
-             <div class="box-icon">
-            <ul class="btn-tasks">
-                <li class="dropdown">
-                    <a href="#" class="toggle_up tip" title="<?= lang('hide_form') ?>">
-                        <i class="icon fa fa-toggle-up"></i>
-                    </a>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="toggle_down tip" title="<?= lang('show_form') ?>">
-                        <i class="icon fa fa-toggle-down"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
 
 
@@ -128,43 +71,6 @@ if ($this->input->post('end_date')) {
                 <p class="introtext">
                     <?= lang('list_results'); ?>
                 </p>
-                  <div id="form">
-
-                    <div class="row">
-                        <div class="col-sm-4">
-                          
-                            <div class="form-group">
-                                <label class="control-label" for="warehouse"><?= lang('event'); ?></label>
-                                <?php
-                                $ev[''] = lang('select') . ' ' . lang('event');
-                                foreach ($event_id as $event) {
-                                    $ev[$event->id] = $event->title;
-                                }
-                                echo form_dropdown('event_id', $ev, (isset($_POST['event_id']) ? $_POST['event_id'] : ''), 'class="form-control" id="event_id" data-placeholder="' . $this->lang->line('select') . ' ' . $this->lang->line('event_id') . '"');
-                                ?>
-                            </div> 
-
-                                                 
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <?= lang('start_date', 'start_date'); ?>
-                                <?php echo form_input('start_date', (isset($_POST['start_date']) ? $_POST['start_date'] : ''), 'class="form-control datetime" id="start_date"'); ?>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <?= lang('end_date', 'end_date'); ?>
-                                <?php echo form_input('end_date', (isset($_POST['end_date']) ? $_POST['end_date'] : ''), 'class="form-control datetime" id="end_date"'); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div
-                            class="controls"> <?php echo form_submit('submit_report', $this->lang->line('submit'), 'class="btn btn-primary"'); ?> </div>
-                    </div>
-
-                </div>
                 <div class="table-responsive">
                     <table id="BrandTable" class="table table-bordered table-hover table-striped reports-table">
                         <thead>
@@ -211,8 +117,6 @@ if ($this->input->post('end_date')) {
     <?= form_submit('submit', 'submit', 'id="action-form-submit"') ?>
 </div>
 <?= form_close() ?>
-<script type="text/javascript" src="<?= $assets ?>js/html2canvas.min.js"></script>
-
 <script language="javascript">
     $(document).ready(function () {
 

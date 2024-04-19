@@ -2959,14 +2959,14 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('index', true);
         $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        if ($this->input->get('warehouse')) {
-            $warehouse = $this->input->get('warehouse');
-        }
+        // if ($this->input->get('warehouse')) {
+        //     $warehouse = $this->input->get('warehouse');
+        // }
 
-        $this->data['stock']        = $warehouse ? $this->reports_model->getWarehouseStockValue($warehouse) : $this->reports_model->getStockValue();
-        $this->data['warehouses']   = $this->site->getAllWarehouses();
-        $this->data['warehouse_id'] = $warehouse;
-        $this->data['warehouse']    = $warehouse ? $this->site->getWarehouseByID($warehouse) : null;
+        // $this->data['stock']        = $warehouse ? $this->reports_model->getWarehouseStockValue($warehouse) : $this->reports_model->getStockValue();
+        // $this->data['warehouses']   = $this->site->getAllWarehouses();
+        // $this->data['warehouse_id'] = $warehouse;
+        // $this->data['warehouse']    = $warehouse ? $this->site->getWarehouseByID($warehouse) : null;
         $this->data['totals']       = $this->reports_model->getWarehouseTotals($warehouse);
         $bc                         = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('reports')]];
         $meta                       = ['page_title' => lang('reports'), 'bc' => $bc];

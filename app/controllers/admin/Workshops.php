@@ -29,17 +29,18 @@ class Workshops extends MY_Controller
 
         public function view($id = null)
     {
-        $this->sma->checkPermissions('index');
+        // $this->sma->checkPermissions('index');
         $ev_details = $this->workshops_model->getEventByView($id);
         $ev_speaker = $this->workshops_model->getSpeakersBy_id($id);
         $ev_register = $this->workshops_model->getRegisterBy_id($id);
-
- 
-        // $this->sma->print_arrays($ev_speaker);
+        $testing = $this->workshops_model->getTesting($id);
+        // $this->sma->print_arrays($testing);
+      
         if (!$id || !$ev_details) {
             $this->session->set_flashdata('error', lang('event_not_found'));
             redirect($_SERVER['HTTP_REFERER']);
         }
+        $this->data['testing']          = $testing;
         $this->data['event']            = $ev_details;
         $this->data['event_speaker']    = $ev_speaker;
         $this->data['event_register']   = $ev_register;
@@ -560,8 +561,7 @@ class Workshops extends MY_Controller
             {$this->db->dbprefix('md_event_registers')}.name,
             {$this->db->dbprefix('md_events')}.title,
             {$this->db->dbprefix('md_events')}.end_date,
-            {$this->db->dbprefix('md_event_registers')}.phone
-         ")
+            {$this->db->dbprefix('md_event_registers')}.phone")
             ->from('md_event_registers')
             ->join('md_events', 'md_event_registers.event_id=md_events.id')
             ->add_column(
@@ -831,92 +831,22 @@ class Workshops extends MY_Controller
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function register_events()
-    {
-        // $this->sma->checkPermissions('products');
-        $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $this->data['event_id'] = $this->site->getAllEvent();
-        $this->data['warehouses'] = $this->site->getAllWarehouses();
-        if ($this->input->post('start_date')) {
-            $dt = 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
-        } else {
-            $dt = 'Till ' . $this->input->post('end_date');
-        }
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('workshops/registers'), 'page' => lang('registers')], ['link' => '#', 'page' => lang('register_report')]];
-        $meta = ['page_title' => lang('register_report'), 'bc' => $bc];
-        $this->page_construct('workshops/register_events', $meta, $this->data);
-    }
-
-
-    public function getRegisterevents($pdf = null, $xls = null)
-    {
-        $event_id = $this->input->get('event_id') ? $this->input->get('event_id') : null;
-        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
-        
-        $this->load->library('datatables');
-        $this->datatables
-        ->select("{$this->db->dbprefix('md_events')}.title,
-        {$this->db->dbprefix('md_event_registers')}.name,
-        {$this->db->dbprefix('md_events')}.start_date,
-        {$this->db->dbprefix('md_events')}.end_date,
-        {$this->db->dbprefix('md_events')}.status,
-        {$this->db->dbprefix('md_event_registers')}.phone,
-        {$this->db->dbprefix('md_event_registers')}.email")
-        ->from('md_event_registers')
-        ->join('md_events', 'md_event_registers.event_id=md_events.id', 'left');
-
-        if ($event_id) {
-        $this->datatables->where('md_event_registers.event_id', $event_id);
-        }if ($start_date) {
-        $this->datatables->where("md_events.start_date BETWEEN '$start_date' AND '$end_date'");
-        }
-        $this->datatables->group_by('md_event_registers.id, md_event_registers.name,
-        md_event_registers.phone,md_events.end_date,md_events.start_date,md_event_registers.email,md_event_registers.phone');
-        $this->datatables->unset_column('id');
-        echo $this->datatables->generate();
-    }
-
-
-    public function getTesting($pdf = null, $xls = null)
+    public function getRegister_reports($pdf = null, $xls = null)
     {
         $event_id = $this->input->get('event_id') ? $this->input->get('event_id') : null;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
         $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
         $speaker_id = $this->input->get('speaker_id') ? $this->input->get('speaker_id') : null;
          if ($pdf || $xls) {
-            $this->db->select($this->db->dbprefix('md_events'). '.title,' .
+        $this->db->select($this->db->dbprefix('md_events'). '.title,' .
          $this->db->dbprefix('md_event_registers') . '.name, ' . 
-          $this->db->dbprefix('md_event_registers') . '.phone, ' . 
-           $this->db->dbprefix('md_event_registers') . '.email, ' . 
-        $this->db->dbprefix('md_event_registers') . '.address',false)
-            ->from('md_events')
-            ->join('md_event_speakers','md_events.id = md_event_speakers.event_id','left')
-            ->join('md_speakers','md_event_speakers.speaker_id = md_speakers.id','left')
-            ->join('md_event_registers','md_events.id = md_event_registers.event_id','left')
-            ->group_by('md_events.id, md_events.title')
-            ->order_by('md_events.title', 'asc');
+            $this->db->dbprefix('md_event_registers') . '.phone, ' . 
+            $this->db->dbprefix('md_event_registers') . '.email, ' . 
+            $this->db->dbprefix('md_event_registers') . '.address',false)
+                    ->from('md_event_registers')
+                    ->join('md_events','md_event_registers.event_id = md_events.id','left')
+            ->group_by('md_event_registers.id, md_event_registers.name')
+            ->order_by('md_event_registers.name', 'asc');
             if ($event_id) {
                  $this->db->where($this->db->dbprefix('md_events') . '.id', $event_id);
             }
@@ -946,7 +876,7 @@ class Workshops extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->phone);
                     $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->email);
                     $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->address);
-                     $pl   += $profit;
+                     // $pl   += $profit;
                     $row++;
                 }
                 $this->excel->getActiveSheet()->getStyle('B' . $row . ':F' . $row)->getBorders()
@@ -969,10 +899,11 @@ class Workshops extends MY_Controller
     $this->load->library('datatables');
     $this->datatables
         ->select($this->db->dbprefix('md_event_registers') . '.id as cid, ' .
-                   $this->db->dbprefix('md_events') . '.title, ' . 
-        $this->db->dbprefix('md_event_registers') . '.name, ' . 
-  
-        $this->db->dbprefix('md_event_registers') . '.phone',false)
+            $this->db->dbprefix('md_events'). '.title,' .
+            $this->db->dbprefix('md_event_registers') . '.name, ' . 
+            $this->db->dbprefix('md_event_registers') . '.phone, ' . 
+            $this->db->dbprefix('md_event_registers') . '.email, ' . 
+            $this->db->dbprefix('md_event_registers') . '.address',false)
                     ->from('md_event_registers')
                     ->join('md_events','md_event_registers.event_id = md_events.id','left');
         if ($event_id) {
@@ -986,7 +917,8 @@ class Workshops extends MY_Controller
 
 }
     }
-     public function testing()
+
+     public function register_reports()
     {
         // $this->sma->checkPermissions('products');
         $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
@@ -999,8 +931,43 @@ class Workshops extends MY_Controller
         }
         $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('workshops/registers'), 'page' => lang('registers')], ['link' => '#', 'page' => lang('register_report')]];
         $meta = ['page_title' => lang('register_report'), 'bc' => $bc];
-        $this->page_construct('workshops/testing', $meta, $this->data);
+        $this->page_construct('workshops/register_reports', $meta, $this->data);
     }
+    // public function getSpeakerTesting(){
+    //     $event_id = $this->input->get('event_id') ? $this->input->get('event_id') : null;
+    //     $speaker_id = $this->input->get('speaker_id') ? $this->input->get('speaker_id') : null;
+    //     $this->load->library('datatables');
+    //     $this->datatables
+    //     ->select($this->db->dbprefix('md_speakers') . '.id as cid, ' .
+    //         $this->db->dbprefix('md_speakers') . '.name, ' . 
+    //         $this->db->dbprefix('md_speakers') . '.phone, ' . 
+    //         $this->db->dbprefix('md_speakers') . '.email, ' . 
+    //         $this->db->dbprefix('md_speakers') . '.address,' .
+    //         '(CASE WHEN ' . $this->db->dbprefix('md_event_speakers') . 
+    //         '.event_id IS NOT NULL THEN "Yes" ELSE "No" END) as status',false)
+    //             ->from('md_speakers')
+    //             ->join('md_event_speakers','md_speakers.id=md_event_speakers.speaker_id','left')
+    //             ->join('md_events','md_event_speakers.event_id=md_events.id','left');
+    //     if ($event_id) {
+    //             $this->datatables->where('md_event_speakers.event_id', $event_id);
+    //     }if ($speaker_id) {
+    //         $this->datatables->where('md_event_speakers.speaker_id',$speaker_id);
+    //     }
+    //     $this->datatables->group_by('md_speakers.id,md_speakers.name');
+    //     $this->datatables->unset_column('cid');
+    //     echo $this->datatables->generate();
+    // }
+    //   public function speakerTesting_report()
+    // {
+    //     // $this->sma->checkPermissions('products');
+    //     $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+    //     $this->data['event_id'] = $this->site->getAllEvent();
+    //     $this->data['speaker_id'] = $this->site->getAllSpeaker();
+        
+    //     $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('workshops/registers'), 'page' => lang('registers')], ['link' => '#', 'page' => lang('register_report')]];
+    //     $meta = ['page_title' => lang('register_report'), 'bc' => $bc];
+    //     $this->page_construct('workshops/speakerTesting_report', $meta, $this->data);
+    // }
 
 
 

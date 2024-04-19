@@ -69,10 +69,10 @@ function row_status($x)
                 </div>
 
                 <div class="col-lg-1 col-md-2 col-xs-6">
-                    <a class="blightOrange white quick-button small" href="<?= admin_url('partners') ?>">
+                    <a class="blightOrange white quick-button small" href="<?= admin_url('System_settings/brands') ?>">
                         <i class="fa fa-heart-o"></i>
 
-                        <p><?= lang('partners') ?></p>
+                        <p><?= lang('brands') ?></p>
                     </a>
                 </div>
 
@@ -185,9 +185,9 @@ function row_status($x)
         ?>
                             <li class=""><a href="#news"><?= lang('news') ?></a></li>
                             <?php
-            } if ($Owner || $Admin || $GP['partners-index']) {
+            } if ($Owner || $Admin || $GP['brands-index']) {
         ?>
-                            <li class=""><a href="#partners"><?= lang('partners') ?></a></li>
+                            <li class=""><a href="#brands"><?= lang('brands') ?></a></li>
                             <?php
             } if ($Owner || $Admin || $GP['careers-index']) {
         ?>
@@ -251,36 +251,41 @@ function row_status($x)
                                 </div>
                             </div>
                              <?php
-    } if ($Owner || $Admin || $GP['partners-index']) {
+    } if ($Owner || $Admin || $GP['brands-index']) {
         ?>
-                            <div id="partners" class="tab-pane fade in">
+                            <div id="brands" class="tab-pane fade in">
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
-                                            <table id="partners-tbl" cellpadding="0" cellspacing="0" border="0"
+                                            <table id="brands-tbl" cellpadding="0" cellspacing="0" border="0"
                                                    class="table table-bordered table-hover table-striped"
                                                    style="margin-bottom: 0;">
                                                 <thead>
                                                 <tr>
                                                     <th style="width:30px !important;">#</th>
+                                                    <th><?= $this->lang->line('image'); ?></th>
+                                                    <th><?= $this->lang->line('code'); ?></th>
+
                                                     <th><?= $this->lang->line('name'); ?></th>
-                                                    <th><?= $this->lang->line('phone'); ?></th>
-                                                    <th><?= $this->lang->line('email'); ?></th>
-                                                    <th><?= $this->lang->line('address'); ?></th>
+                                                    <th><?= $this->lang->line('slug'); ?></th>
+
+                                         
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php if (!empty($partners)) {
+                                                <?php if (!empty($brands)) {
             $r = 1;
-            foreach ($partners as $partner) {
-                echo '<tr id="' . $partner->id . '" class="partner_link pointer"><td>' . $r . '</td>
-                                            <td>' . $partner->name . '</td>
-                                            <td>' . $partner->phone . '</td>
-                                            <td>' . $partner->email . '</td>
-                                            <td>' . $partner->address . '</td>
+            foreach ($brands as $brand) {
+                echo '<tr id="' . $brand->id . '" class="brand_link pointer"><td>' . $r . '</td>
+                <td><img src="' . base_url('assets/uploads/' . $brand->image) . '" alt="' . $brand->name . '" style="width: 30px;"></td>
+                                            <td>' . $brand->code . '</td>
+                                            <td>' . $brand->name . '</td>
+                                            <td>' . $brand->slug . '</td>
+
                                         </tr>';
                 $r++;
             }
+
         } else {
             ?>
                                                     <tr>

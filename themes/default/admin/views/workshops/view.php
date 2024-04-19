@@ -25,8 +25,7 @@
                                 <div id="multiimages" class="padding10">
                                     <?php if (!empty($images)) {
                              echo '<a class="img-thumbnail" data-toggle="lightbox" data-gallery="multiimages" data-parent="#multiimages" href="' . base_url() . 'assets/uploads/' . $event->image . '" style="margin-right:5px;"><img class="img-responsive" src="' . base_url() . 'assets/uploads/thumbs/' . $event->image . '" alt="' . $event->image . '" style="width:' . $Settings->twidth . 'px; height:' . $Settings->theight . 'px;" /></a>';
-    }
-        ?>
+                         }?>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
@@ -61,23 +60,29 @@
                                                 <td><?= lang('description'); ?></td>
                                                 <td><?php echo$event->description; ?></td>
                                             </tr>
+                                            <tr>
+                                                <td><?= lang('total_registers');?></td>
+                                                <td><?php 
+                                                if ($testing->total_register == 0) {
+                                                    echo "Null";
+                                                }else{
+                                                echo $testing->total_register;
+                                                }?> 
+                                                <?php
+                                                if ($testing->total_register <= 1 ) {
+                                                    echo "person";
+                                              
+                                                }else {
+                                                    echo "persons";
+                                                    } ?>
+                                                    
+                                                </td>
+                                            </tr>
+                                           
 
                                             <table
                                                 class="table table-bordered table-striped table-condensed dfTable three-columns">
-                                                <thead>
-                                                    <tr>
-                                                        <th><?= lang('list_register') ?></th>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($event_register as $key) { ?>
-                                                    
-                    <td><?php echo'<tr><td style="text-align: center;">'.'   '.$key->rname.'</tr></td><strong>';?>
-                                                    </td>
-                                                    <?php } ?>
-
-                                                </tbody>
-                                                </tr>
-
+                                             <!--  -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -112,3 +117,8 @@
                             </div>
                         </div>
                     </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
